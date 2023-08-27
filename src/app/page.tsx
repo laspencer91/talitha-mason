@@ -1,112 +1,141 @@
-import Image from 'next/image'
+"use client"
+
+import {HorizontalSeparator} from "@/app/components/horizontal-separator";
+import {Header} from "@/app/components/header";
+import {AtSign, Phone, User, Home as HomeIcon } from "react-feather";
+import {JobExperience} from "@/app/components/job-experience";
+import {ProgressBar} from "@/app/components/progress-bar";
+import * as htmlToImage from 'html-to-image';
+import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
+import {useRef} from "react";
+import { jsPDF } from "jspdf";
+import download from 'downloadjs';
+
+const jobExperiences = [
+  {
+    position: 'Personal Care Assistant',
+    company: 'Elara Caring | September 2022 - Present',
+    listItems: [
+      'Provide compassionate assistance to elderly individuals, offering companionship and support.',
+      'Run daily errands, perform basic housekeeping, and prepare meals.',
+      'Demonstrate empathy and help create a comfortable atmosphere for clients.',
+    ]
+  },
+  {
+    position: 'Library Aide',
+    company: 'Northwest Metro Library | October 2019 - August 2023',
+    listItems: [
+      'Managed book drops, sorting, shelving, and inventory tasks efficiently.',
+      'Assisted guests in locating materials and provided excellent customer service.',
+      'Set up rooms for community events, ensuring a comfortable environment.',
+      'Skillfully arranged public book displays to engage and enhance visitor experience.',
+    ]
+  },
+  {
+    position: 'Sales Associate & Visual Team Member',
+    company: 'Forever 21 | July 2017 - August 2018',
+    listItems: [
+      'Progressed from Sales Associate to Visual Team member for exceptional work ethic and dedication.',
+      'Collaborated with a visual team to create captivating in-store displays.',
+      'Contributed to product placement and distribution, enhancing visual experiences.',
+      'Maintained high standards in visual appearance and conducted effective customer interactions.',
+    ]
+  },
+  {
+    position: 'Dress Specialist',
+    company: 'Davids Bridal | August 2018 - February 2019',
+    listItems: [
+      'Provided styling and dressing expertise for various occasions, including proms and weddings.',
+      'Assisted brides with preparations for their ceremonies, ensuring a memorable experience.',
+      'Offered exceptional customer service, earning recognition for strong work ethic.',
+    ]
+  },
+  {
+    position: 'Sales Associate',
+    company: 'Express | March 2019 - October 2019',
+    listItems: [
+      'Demonstrated excellent customer service and provided style advice to customers.',
+      'Maintained store appearance and conducted pre-opening cleaning tasks.',,
+      'Assisted in cash register operations and upheld high standards of conduct.',
+    ],
+  }
+]
 
 export default function Home() {
+
+  function toImage() {
+    htmlToImage.toPng(document.getElementById('resume-container'), { quality: 0.95 })
+      .then(function (dataUrl) {
+        download(dataUrl, 'resume-image.png');
+        var link = document.createElement('a');
+        link.download = 'my-image-name.jpeg';
+        const pdf = new jsPDF();
+        const imgProps = pdf.getImageProperties(dataUrl);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        console.log(pdfWidth);
+        console.log(pdfHeight);
+        pdf.addImage(dataUrl, 'PNG', 0, 0,pdfWidth, pdfHeight);
+        pdf.save("download.pdf");
+      });
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className='flex justify-center font-infant'>
+      <div className='h-full justify-start'><button onClick={toImage}>PDF</button></div>
+      <div className='w-[1080px] h-[1920px] bg-zinc-100 flex' id='resume-container'>
+        <div className={`h-full w-[70px] background-2`}></div>
+        <div className='w-full flex flex-col gap-5 py-8 px-20 items-center header-2'>
+          <div className='text-8xl font-bold header-1 font-allison'>Talitha Mason</div>
+          <div className='flex flex-row gap-6 text-black'>
+            <div className='flex flex-row gap-2'>
+              <div className='w-7 h-7 p-[6px] rounded-full bg-purple-400 flex justify-center items-center'><User color='white' /></div>Talitha Mason
+            </div>
+            <div className='flex flex-row gap-2'>
+              <div className='w-7 h-7 p-[6px] rounded-full bg-purple-400 flex justify-center items-center'><HomeIcon color='white' /></div>4501 Boardwalk Ave. Moore, OK
+            </div>
+            <div className='flex flex-row gap-2'>
+              <div className='w-7 h-7 p-[6px] rounded-full bg-purple-400 flex justify-center items-center'><Phone color='white' /></div>405-885-5398
+            </div>
+            <div className='flex flex-row gap-2'>
+              <div className='w-7 h-7 p-[6px] rounded-full bg-purple-400 flex justify-center items-center'><AtSign  color='white' /></div>talithamason@ymail.com
+            </div>
+          </div>
+          <HorizontalSeparator />
+          <div className='w-full flex flex-col gap-5 items-start'>
+            <Header>MY SUMMARY</Header>
+            <div className='text-purple-400'>I am passionate and creative with a track record of enhancing visual experiences and creating comfortable and engaging environments. I am excited for the opportunity to learn a new skill set and apply my strengths in customer service, styling, and love of people to excel as a Preschool Photographer at Lifetouch!</div>
+          </div>
+          <HorizontalSeparator />
+          <div className='w-full flex flex-col gap-5 items-start'>
+            <Header>EXPERIENCE & EMPLOYMENT</Header>
+            {jobExperiences.map((experience, expIndex) => (
+              <JobExperience key={expIndex} position={experience.position} company={experience.company}>
+                <ul>
+                  {experience.listItems.map((item, index) => (<li key={index}>{item}</li>))}
+                </ul>
+              </JobExperience>
+              )
+            )}
+          </div>
+          <HorizontalSeparator />
+          <div className='w-full flex flex-col gap-5 items-start'>
+            <Header>EDUCATION</Header>
+            <JobExperience position={'YUKON HIGH SCHOOL'} company={'High School Diploma, 2012'} />
+          </div>
+          <HorizontalSeparator />
+          <div className='w-full flex flex-col gap-5 items-start'>
+            <Header>SKILLS</Header>
+            <div className='header-2'>Customer service & interpersonal skills</div>
+            <ProgressBar percentage={94} />
+            <div className='header-2'>Creative problem-solving</div>
+            <ProgressBar percentage={90} />
+            <div className='header-2'>Visual Merchandising & Display Creation</div>
+            <ProgressBar percentage={80} />
+            <div className='header-2'>Photography & artistic creativity</div>
+            <ProgressBar percentage={76} />
+          </div>
         </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
       </div>
     </main>
   )

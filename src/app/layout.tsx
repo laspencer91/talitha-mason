@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import React from "react";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,6 +17,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <title>Talitha</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Allison&family=Ysabeau+Infant:ital,wght@0,1;0,200;0,800;1,200&display=swap" rel="stylesheet" />      </head>
       <body className={inter.className}>{children}</body>
     </html>
   )
