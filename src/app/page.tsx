@@ -64,7 +64,11 @@ const jobExperiences = [
 export default function Home() {
 
   function toImage() {
-    htmlToImage.toPng(document.getElementById('resume-container'), { quality: 0.95 })
+    const resumeContainer = document.getElementById('resume-container');
+    if (!resumeContainer) {
+      throw new Error('Could not find the resume container element.')
+    }
+    htmlToImage.toPng(resumeContainer, { quality: 0.95 })
       .then(function (dataUrl) {
         download(dataUrl, 'resume-image.png');
         var link = document.createElement('a');
@@ -73,8 +77,6 @@ export default function Home() {
         const imgProps = pdf.getImageProperties(dataUrl);
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-        console.log(pdfWidth);
-        console.log(pdfHeight);
         pdf.addImage(dataUrl, 'PNG', 0, 0,pdfWidth, pdfHeight);
         pdf.save("download.pdf");
       });
