@@ -27,19 +27,15 @@ body {
 }
 
 .header-1 {
-  @apply text-violet-500
+  @apply text-black
 }
 
 .header-2 {
   @apply text-purple-400
 }
 
-.background-1 {
-  @apply bg-violet-600
-}
-
 .background-2 {
-  @apply bg-purple-500
+  @apply bg-purple-400
 }
 
 
